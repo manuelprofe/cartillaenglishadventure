@@ -1,0 +1,25 @@
+# Working & dev files - no se publican
+_dev/
+.claude/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Logs / temporales
+*.log
+npm-debug.log*
+.cache/
+
+# Netlify CLI
+.netlify/
+
+# Dependencies / build output
+node_modules/
+dist/
+build/

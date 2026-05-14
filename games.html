@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English Land Practice Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Fredoka+One&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;font-family:'Nunito',system-ui,sans-serif;color:#23164f;background:#12072f;overflow-x:hidden}
+  button{font-family:inherit;cursor:pointer}
+  .shell{min-height:100vh;background:linear-gradient(rgba(18,7,47,.78),rgba(18,7,47,.9)),url('fondos/nivel4-bg-far.png') center/cover fixed;padding:28px}
+  .top{max-width:1180px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:#fff}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand img{width:54px;height:54px;object-fit:contain;filter:drop-shadow(0 0 18px rgba(255,217,61,.55))}
+  .brand h1{font-family:'Russo One',sans-serif;font-size:clamp(26px,4vw,44px);line-height:1;color:#ffd447}
+  .brand p{color:#d9cffb;font-size:14px;margin-top:4px}
+  .pill{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+  .layout{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px}
+  .panel,.stage{background:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.36);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.22);backdrop-filter:blur(14px)}
+  .panel{padding:18px}
+  .panel h2,.stage h2{font-family:'Fredoka One',sans-serif;font-weight:400;color:#21124a}
+  .game-card{width:100%;text-align:left;border:2px solid #ded7f7;background:#fff;border-radius:14px;padding:14px;margin-top:12px;display:flex;gap:12px;align-items:center;transition:.18s}
+  .game-card:hover,.game-card.active{border-color:#5e3ae2;transform:translateY(-2px);box-shadow:0 14px 28px rgba(33,18,74,.12)}
+  .game-card.locked{opacity:.68}
+  .game-card img{width:58px;height:58px;object-fit:contain;flex-shrink:0}
+  .game-card b{display:block;color:#21124a;font-size:15px}
+  .game-card span{display:block;color:#645486;font-size:12px;line-height:1.35;margin-top:3px}
+  .tag{display:inline-flex;margin-top:6px;border-radius:999px;background:#f1ecff;color:#5e3ae2;padding:3px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.7px}
+  .stage{padding:22px;min-height:640px}
+  .stage-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:16px}
+  .stage-head p{color:#645486;line-height:1.55;max-width:620px}
+  .level-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px}
+  .level-btn,.action{border:2px solid #ded7f7;background:#fff;color:#5e3ae2;border-radius:999px;padding:8px 13px;font-weight:900}
+  .level-btn.active{background:#5e3ae2;color:#fff;border-color:#5e3ae2}
+  .action{background:linear-gradient(135deg,#ffd447,#ff7a3d);border:none;color:#21124a;box-shadow:0 5px 0 rgba(33,18,74,.18)}
+  .action.secondary{background:#fff;color:#5e3ae2;border:2px solid #ded7f7;box-shadow:none}
+  .bingo-board{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}
+  .bingo-cell{min-height:84px;border:2px solid #ded7f7;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;font-weight:900;color:#21124a;line-height:1.15;transition:.15s}
+  .bingo-cell.marked{background:linear-gradient(135deg,#5e3ae2,#18c8ff);border-color:#5e3ae2;color:#fff;box-shadow:0 10px 20px rgba(94,58,226,.2)}
+  .game-icon{display:block;margin-bottom:4px}
+  .game-icon img{width:42px;height:42px;object-fit:contain;display:block;margin:0 auto}
+  .icon-fallback,.icon-swatch,.icon-image-tile{width:42px;height:42px;margin:0 auto;border-radius:12px;display:grid;place-items:center;font-size:10px;font-weight:900;background:#f8f5ff;border:1px solid #ded7f7;color:#21124a;overflow:hidden}
+  .icon-image-tile{background:linear-gradient(135deg,#fff,#f8f5ff)}
+  .icon-swatch{background:var(--swatch);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .caller{margin-top:16px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#21124a,#39217f);color:#fff;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+  .caller small{display:block;color:#ffd447;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+  .caller strong{font-size:clamp(26px,4vw,42px);font-family:'Fredoka One',sans-serif;font-weight:400}
+  .def{color:#d9cffb;margin-top:4px;font-size:14px}
+  .mission-log{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+  .log-card{background:#fbf8ff;border:1px solid #ded7f7;border-radius:14px;padding:12px}
+  .log-card b{display:block;color:#5e3ae2;font-size:12px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+  .log-card span{font-size:13px;color:#645486}
+  .hidden{display:none!important}
+  .empty-state{min-height:480px;display:grid;place-items:center;text-align:center;color:#fff;background:linear-gradient(rgba(33,18,74,.7),rgba(33,18,74,.82)),url('fondos/nivel2-bg-far.png') center/cover;border-radius:16px;padding:24px}
+  .empty-state img{width:150px;filter:drop-shadow(0 20px 22px rgba(0,0,0,.32));margin-bottom:12px}
+  .empty-state h2{color:#ffd447;font-size:34px;margin-bottom:8px}
+  .empty-state p{max-width:560px;color:#ece5ff;line-height:1.6;margin:0 auto 16px}
+  @media(max-width:900px){.layout{grid-template-columns:1fr}.top{display:block}.pill{margin-top:12px}.mission-log{grid-template-columns:1fr}.bingo-cell{min-height:68px;font-size:13px}.shell{padding:16px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="top">
+    <div class="brand">
+      <img src="assets/characters/lumi-wave.png" alt="Lumi">
+      <div>
+        <h1>Practice Games</h1>
+        <p>Juegos rejugables conectados con English Land</p>
+      </div>
+    </div>
+    <div class="pill">Banco aleatorio por nivel</div>
+  </header>
+
+  <section class="layout">
+    <aside class="panel">
+      <h2>Elige una misión</h2>
+      <button class="game-card active" data-game="bingo">
+        <img src="assets/characters/cosmo-wave.png" alt="">
+        <div><b>Word Bingo Quest</b><span>Cartones diferentes en cada partida, definiciones y vocabulario por nivel.</span><i class="tag">Jugable</i></div>
+      </button>
+      <button class="game-card" data-game="runner">
+        <img src="assets/characters/lumi-wave.png" alt="">
+        <div><b>Adventure Runner</b><span>El juego actual de plataformas con estaciones de preguntas.</span><i class="tag">Disponible</i></div>
+      </button>
+      <button class="game-card locked" data-game="simon">
+        <img src="assets/characters/pixie-wave.png" alt="">
+        <div><b>Simon Says 6</b><span>Comandos corporales y secuencias auditivas crecientes.</span><i class="tag">Siguiente</i></div>
+      </button>
+      <button class="game-card locked" data-game="memory">
+        <img src="assets/characters/astro-wave.png" alt="">
+        <div><b>Memory Quest</b><span>Parejas imagen-palabra y frase-significado con dificultad variable.</span><i class="tag">Diseñado</i></div>
+      </button>
+      <button class="game-card locked" data-game="sentences">
+        <img src="assets/characters/nova-ready.png" alt="">
+        <div><b>Sentence Builder</b><span>Construcción aleatoria de frases por bloques.</span><i class="tag">Diseñado</i></div>
+      </button>
+    </aside>
+
+    <section class="stage">
+      <div id="bingo-game">
+        <div class="stage-head">
+          <div>
+            <h2>Word Bingo Quest</h2>
+            <p>Cada partida genera un cartón nuevo con 24 palabras y un centro libre. El docente o estudiante llama definiciones al azar; gana quien complete una línea, columna o diagonal.</p>
+          </div>
+          <button class="action" id="new-card">Nueva partida</button>
+        </div>
+        <div class="level-row" id="level-row"></div>
+        <div class="caller">
+          <div>
+            <small>Palabra llamada</small>
+            <strong id="called-word">Ready?</strong>
+            <div class="def" id="called-def">Elige un nivel y presiona "Llamar palabra".</div>
+          </div>
+          <button class="action" id="call-word">Llamar palabra</button>
+        </div>
+        <div class="bingo-board" id="bingo-board"></div>
+        <div class="mission-log">
+          <div class="log-card"><b>Rejugabilidad</b><span id="pool-size">0 palabras disponibles</span></div>
+          <div class="log-card"><b>Ronda</b><span id="round-info">0 llamadas</span></div>
+          <div class="log-card"><b>Progreso</b><span id="bingo-status">Sin línea completa</span></div>
+        </div>
+      </div>
+
+      <div id="runner-game" class="hidden">
+        <div class="empty-state">
+          <div>
+            <img src="assets/characters/lumi-celebrate.png" alt="">
+            <h2>Adventure Runner</h2>
+            <p>El juego de plataformas sigue disponible como una misión del universo. Úsalo para practicar preguntas tipo SABER con obstáculos, estrellas y personajes.</p>
+            <button class="action" onclick="window.open('juego.html','_blank','noopener')">Abrir Adventure Runner</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="planned-game" class="hidden">
+        <div class="empty-state">
+          <div>
+            <img id="planned-img" src="assets/characters/pixie-wave.png" alt="">
+            <h2 id="planned-title">Próxima misión</h2>
+            <p id="planned-copy">Este juego queda planteado para implementarse con el mismo banco aleatorio de English Land.</p>
+            <button class="action secondary" data-game="bingo">Volver al Bingo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>
+<script src="js/noto-icon-map.js"></script>
+<script src="js/practice-games.js"></script>
+</body>
+</html>
+
