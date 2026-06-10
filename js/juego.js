@@ -183,7 +183,7 @@ const ASTRO_TIPS = {
 • Eraser = Borrador   •   Backpack = Morral
 
 💡 CONSEJO: Di "Good morning!" cuando llegues al colegio cada día.
-¡English Land te espera! 🌍`,
+¡Englishland te espera! 🌍`,
   },
   2: {
     title: '🚀 Consejo del Astronauta — Nivel 2',
@@ -272,223 +272,295 @@ const ASTRO_TIPS = {
   },
 };
 
-// ==================== HISTORIAS DE English Land ====================
-// Adaptadas de "historia-inglisland.md" — code-switching progresivo.
+// ==================== HISTORIAS DE Englishland ====================
+// Narrativa oficial de English Adventure Quest, con code-switching progresivo.
 // Las palabras en inglés van entre <strong class="en">...</strong>.
 // Uso: innerHTML (no textContent) en showStory.
 
-const ENGLISH_LAND_INTRO = `Era un jueves de los aburridos. Solo buscabas un lápiz.
+const ENGLISH_LAND_INTRO = `Era un día común en el salón de clase. Los lápices estaban sobre las mesas, los cuadernos esperaban ser abiertos y el tablero parecía listo para una nueva lección.
 
-Entonces lo viste: un <strong class="en">book</strong> en el rincón de tu estantería, de tapas color cielo, que <em>respiraba</em>. Subía y bajaba como si tuviera pulmones de papel.
+Pero ese día algo diferente ocurrió.
 
-Lo tocaste. Solo un dedito. Y de adentro salió volando <strong class="en">Pixie</strong> —una estrellita rosada con casco de astronauta— que te miró fijo y dijo:
+Sobre el escritorio apareció un cuaderno azul con estrellas doradas. En la portada brillaba una palabra:
 
-—¿Vienes o te quedas con el lápiz?
+<strong class="en">Englishland</strong>
 
-Caíste suave, con cosquillas en la barriga, viendo planetas color uva y nubes que te decían <strong class="en">hello</strong> al pasar. Aterrizaste sobre hierba brillante. Frente a ti: <strong class="en">Lumi</strong>, una estrella amarilla que ya te esperaba.
+El cuaderno hizo <em>plip, plip</em>. Sus páginas se movieron solas y una luz rosada salió volando.
 
-—<strong class="en">Hi!</strong> Yo soy Lumi. English Land se está apagando. Las palabras se nos están yendo. Solo tú puedes salvarlas.
+—¡Cuidado! Soy <strong class="en">Pixie</strong>. Vengo de Englishland y necesitamos ayuda.
 
-Sentiste algo raro en el pecho. No miedo. Otra cosa. Como cuando alguien te pide ayuda de verdad y tú sabes que sí puedes.
+El cuaderno mostró un cielo morado, caminos de estrellas, árboles luminosos y palabras flotando. Pero algunas palabras estaban perdiendo su luz: <strong class="en">hello</strong>, <strong class="en">book</strong>, <strong class="en">friend</strong>, <strong class="en">I can</strong>.
 
-—<strong class="en">You learn. You play. You read. You speak.</strong> Cada palabra que aprendas enciende una luz aquí.
+Entonces apareció Lumi, una estrella amarilla con mochila de luces.
 
-—<strong class="en">Are you ready?</strong>
+—<strong class="en">Hi!</strong> Soy Lumi. En Englishland las palabras viven cuando alguien las escucha, las lee, las dice y las usa. Cuando los niños sienten miedo de equivocarse o se quedan callados, las palabras empiezan a apagarse.
 
-Respiraste hondo. Y dijiste:
+Lumi levantó una pequeña estrella.
 
-—<strong class="en">Yes. I am ready.</strong> 🌟`;
+—Estas son las <strong class="en">Mission Stars</strong>. No son notas ni castigos. Son luces de esfuerzo, participación, ayuda y confianza. Aparecen cada vez que intentas, corriges y te atreves a usar el inglés.
+
+—¿Aunque nos equivoquemos? - preguntó alguien.
+
+—Especialmente cuando lo intentan. <strong class="en">Trying is learning.</strong>
+
+Pixie abrió el mapa del cuaderno: Bosque de los Sonidos, Valle de las Palabras, Ciudad de las Frases y Plaza del Encuentro.
+
+—Entonces, exploradores... ¿vienen a ayudar a Englishland?
+
+El grupo respiró hondo y respondió:
+
+<strong class="en">Yes. We are ready.</strong>`;
 
 // Historias de apertura — se muestran al entrar al nivel
 const LEVEL_STORIES = {
   0: ENGLISH_LAND_INTRO,
 
-  1:`🟣 <strong class="en">Chapter 1 · Cosmo y el Reino sin nombres</strong>
+  1:`🟣 <strong class="en">Nivel 1 · English Explorer</strong>
 
-El primer puente de luz era violeta. Lumi caminaba al frente.
+El portal del cuaderno llevó al grupo hasta el <strong class="en">Bosque de los Sonidos</strong>. Los árboles tenían hojas de colores, los caminos brillaban como polvo de estrellas y en el aire se escuchaban sonidos incompletos.
 
-Al final del puente encontraste un reino raro. Las cosas no tenían nombre. Un perro que no sabía que era un perro. Una manzana que temblaba. Un pájaro que había olvidado volar.
+—<strong class="en">He... he...</strong> - decía una voz entre los árboles.
 
-—Bienvenido al <strong class="en">Kingdom of Lost Names</strong> —dijo una voz grave.
+—<strong class="en">Blu... blu...</strong> - susurraba una hoja azul.
 
-Era <strong class="en">Cosmo</strong>: un planeta color púrpura, con anillos de luz cyan y casco de astronauta. Tenía una sonrisa tranquila.
+—<strong class="en">One... two...</strong> - cantaban unas piedras pequeñas, pero no podían continuar.
 
-—Las palabras se fueron. Y cuando las cosas se quedan sin nombre, empiezan a desvanecerse. <strong class="en">Forever.</strong>
+Entonces apareció <strong class="en">Cosmo</strong>, un guardián tranquilo con brillo violeta.
 
-—¿Cómo las llamamos?
+—Bienvenidos al Bosque de los Sonidos. Este es el primer territorio de Englishland. Aquí nacen las palabras, pero muchas están dormidas.
 
-—<strong class="en">With your voice.</strong> Mira al <strong class="en">dog</strong>. Dilo fuerte.
+Cosmo señaló una palabra que flotaba:
 
-—<strong class="en">DOG!</strong>
+<strong class="en">hello</strong>
 
-El perrito brilló. Movió la cola. Plip. Una palabra dorada en tu bolsillo: <strong class="en">DOG</strong>.
+—Para despertar Englishland, primero debemos escuchar y repetir sin miedo. Cada intento enciende un poquito más la palabra.
 
-—Ahora <strong class="en">the apple</strong>. Y <strong class="en">the bird</strong>. Y todo lo que veas. ¡Cada palabra que digas enciende algo! 🐾`,
+Lumi sonrió:
 
-  2:`🟠 <strong class="en">Chapter 2 · Nova y la Carrera de las Frases</strong>
+—Hoy serán <strong class="en">English Explorers</strong>. Descubrirán saludos, colores, números, objetos del colegio y primeras expresiones.
 
-Cruzaste el puente naranja y casi te explota la cabeza de los colores.
+Cosmo levantó una Mission Star.
 
-El segundo reino era una pista de carreras que flotaba, subía, bajaba y se torcía como un fideo. En el aire brillaban palabras sueltas: <strong class="en">I · am · happy · have · a · cat · like · pizza</strong>.
+—Repeat with me: <strong class="en">Hello!</strong>
 
-—<strong class="en">¡¡¡HOLAAAAA!!!</strong>
+Y cuando el grupo lo dijo, una rama del bosque se iluminó.`,
 
-Algo naranja pasó a toda velocidad y te despeinó. Era <strong class="en">Nova</strong> —un cometa con cola de chispas y ojos enormes— que frenó en seco delante de ti.
+  2:`🟠 <strong class="en">Nivel 2 · Word Builder</strong>
 
-—<strong class="en">Welcome!</strong> Aquí no se camina. Aquí se <strong class="en">run</strong>. Aquí se <strong class="en">jump</strong>. ¡Porque las frases también corren!
+Después de cruzar el bosque, el grupo llegó al <strong class="en">Valle de las Palabras</strong>. Había tarjetas flotantes con animales, comida, ropa y emociones.
 
-Miraste las palabras flotando. <strong class="en">I. Am. Happy.</strong>
+Pero las tarjetas estaban confundidas. Una manzana decía <strong class="en">shoes</strong>. Una camiseta decía <strong class="en">lion</strong>. Un rostro feliz decía <strong class="en">sad</strong>.
 
-—<strong class="en">I am happy.</strong>
+—¡Oh, no! - exclamó Pixie -. El valle perdió sus conexiones.
 
-Las tres palabras se agarraron de las manos y salieron disparadas por la pista. ¡Llegaron a la meta entre aplausos!
+Una luz naranja pasó a toda velocidad y frenó frente al grupo.
 
-—<strong class="en">You are fast. You are smart. Are you ready for the race?</strong> 🏁`,
+—<strong class="en">Welcome!</strong> Soy <strong class="en">Nova</strong>. Este es el Valle de las Palabras, donde cada imagen debe encontrar su palabra y cada palabra debe encontrar su significado.
 
-  3:`🌙 <strong class="en">Chapter 3 · Astro y la Biblioteca que Susurra</strong>
+Nova tomó una tarjeta con un perro.
 
-El tercer reino estaba en silencio. Un silencio de <strong class="en">library</strong>.
+—Si esta imagen recuerda su palabra, vuelve a brillar.
 
-Frente a ti había una biblioteca tan alta que no se veía dónde terminaba. Miles de libros volaban solos de estante en estante.
+La tarjeta tembló:
 
-Pero algo estaba mal. Los libros estaban grises. Apagados.
+<strong class="en">dog</strong>
 
-—<strong class="en">Welcome</strong> —dijo una voz suave.
+Al decir <strong class="en">dog</strong>, el dibujo movió la cola y se iluminó.
 
-Era <strong class="en">Astro</strong>: una luna chiquita color cyan-lavanda, con gafas redondas de leer y un libro abierto entre sus manitas.
+—En este nivel serán <strong class="en">Word Builders</strong> - dijo Lumi -. Van a conectar palabras, imágenes, gustos y emociones.
 
-—Un <strong class="en">book</strong> que nadie lee se apaga. Las historias que viven adentro se quedan dormidas.
+Nova mostró dos frases sencillas:
 
-Te dio un libro pequeño de tapas verdes. Adentro, una sola frase:
+<strong class="en">I like apples.</strong>
 
-<em>The cat is on the mat.</em>
+<strong class="en">I don't like broccoli.</strong>
 
-Al lado, un dibujito: un gatito en una alfombrita. Lo entendiste sin traducción.
+—Cada palabra que conecten devolverá color al valle. <strong class="en">Ready?</strong>
 
-—<strong class="en">Read it out loud. With feeling.</strong>
+—<strong class="en">Ready!</strong>`,
 
-—<strong class="en">The cat is on the mat.</strong>
+  3:`🌙 <strong class="en">Nivel 3 · Sentence Hero</strong>
 
-El libro brilló. Verde brillante. Y del libro salió un gatito de verdad. 📚`,
+El camino llevó al grupo hasta la <strong class="en">Ciudad de las Frases</strong>, una ciudad construida con palabras. Había casas hechas de verbos, puentes formados por preguntas y relojes gigantes que marcaban diferentes horas.
 
-  4:`☁️ <strong class="en">Chapter 4 · Nebu y el Festival de las Voces</strong>
+Pero las palabras estaban separadas.
 
-El cuarto puente no era de luz. Era de música.
+En una calle flotaban:
 
-A cada paso sonaba una nota distinta. Te reías sin querer.
+<strong class="en">I · wake up · at · seven</strong>
 
-Al final encontraste un <strong class="en">festival</strong> en el cielo: nubes que bailaban, escenarios flotantes, y una música que parecía hecha de risas.
+En otra avenida aparecían:
 
-—<strong class="en">Hello, hello, hello!</strong> —dijo una nube suavecita con destellos por dentro—. <strong class="en">I am Nebu.</strong> ¡Bienvenido al <strong class="en">Festival of Voices</strong>!
+<strong class="en">Can · you · run · ?</strong>
 
-—Aquí no se aprende callado. Aquí se aprende <strong class="en">talking. Singing. Asking. Answering.</strong>
+Y en una plaza pequeña se leía:
 
-Las criaturas del festival se habían quedado sin voz. Te acercaste a un pajarito de algodón.
+<strong class="en">What time is it?</strong>
 
-—<strong class="en">Hello</strong> —le dijiste, suavecito.
+Desde una torre de libros bajó <strong class="en">Astro</strong>, con gafas redondas y un cuaderno de notas.
 
-El pajarito abrió los ojos enormes.
+—Bienvenidos a la Ciudad de las Frases. Aquí las palabras necesitan trabajar juntas. Una palabra puede brillar, pero una frase puede abrir caminos.
 
-—<strong class="en">He… hello?</strong> —dijo, sorprendido de poder hablar.
+Astro unió unas palabras:
 
-—<strong class="en">What is your name?</strong>
+<strong class="en">I wake up at seven.</strong>
 
-—<strong class="en">My name is Pip.</strong>
+La calle se iluminó. Luego apareció un puente cuando el grupo leyó:
 
-Pip empezó a brillar. Empezó a cantar. ¡Tu voz devuelve el festival a la vida! 🎵`,
+<strong class="en">Can you jump?</strong>
+
+—En este nivel serán <strong class="en">Sentence Heroes</strong> - explicó Lumi -. Su misión es unir palabras para hablar de rutinas, acciones, horas y preguntas sencillas.
+
+Astro sonrió.
+
+—<strong class="en">Let's build sentences.</strong>`,
+
+  4:`☁️ <strong class="en">Nivel 4 · English Communicator</strong>
+
+El último camino llevó al grupo hasta la <strong class="en">Plaza del Encuentro</strong>. Había una escuela, un parque, una biblioteca, un mercado y un hospital. Todo parecía listo para una celebración.
+
+Pero la plaza estaba en silencio.
+
+Las personas querían hablar, pero no encontraban las palabras. Los lugares estaban allí, pero nadie podía describirlos.
+
+Entonces bajó <strong class="en">Nebu</strong>, una nube suave con destellos de luz.
+
+—Bienvenidos a la Plaza del Encuentro. Este es el lugar donde Englishland vuelve a hablar.
+
+Nebu señaló el mapa:
+
+<strong class="en">There is a park.</strong>
+
+El parque se iluminó.
+
+Luego señaló dos escuelas:
+
+<strong class="en">There are two schools.</strong>
+
+Las ventanas se encendieron.
+
+—Ya conocen sonidos, palabras y frases - dijo Lumi -. Ahora serán <strong class="en">English Communicators</strong>. Usarán el inglés para hablar con otros, describir lugares y participar en diálogos sencillos.
+
+Pixie levantó una tarjeta:
+
+<strong class="en">Where is the library?</strong>
+
+Astro respondió:
+
+<strong class="en">It is near the park.</strong>
+
+Nebu sonrió.
+
+—Englishland necesita escuchar sus voces. <strong class="en">Speak with confidence.</strong>`,
 };
 
 // Historias de cierre — se muestran al completar el nivel
 const LEVEL_CLOSE_STORIES = {
-  1:`🏆 <strong class="en">¡Kingdom of Lost Names — Restored!</strong>
+  1:`🏆 <strong class="en">Mission Star ganada</strong>
 
-Llegaste a la plaza central. La fuente estaba seca. En el borde había una placa:
+Al terminar el recorrido, el Bosque de los Sonidos ya no estaba en silencio. Las hojas decían <strong class="en">green</strong>, las flores brillaban con <strong class="en">red</strong>, <strong class="en">yellow</strong> y <strong class="en">blue</strong>, y unas piedras pequeñas saltaban contando:
 
-<em>"Cuando todas las cosas tengan nombre, el agua va a volver."</em>
+<strong class="en">one, two, three, four, five...</strong>
 
-Miraste alrededor. <strong class="en">Table. Chair. Bread. Glass.</strong> Plip plip plip plip.
+Cosmo miró al grupo con orgullo.
 
-La fuente tosió. Y soltó un chorro de agua brillante que subió hasta el cielo y bajó como lluvia de estrellitas.
+—Lo lograron. Aprender inglés no empieza hablando perfecto. Empieza escuchando, intentando y participando.
 
-Los habitantes te aplaudieron: —<strong class="en">Thank you! Thank you!</strong>
+Lumi colocó la primera Mission Star en el mapa.
 
-Cosmo te puso uno de sus anillos en la cabeza, como una corona.
+—Esta estrella representa su primer paso en Englishland.
 
-—<strong class="en">You did it.</strong> Devolviste los nombres a las cosas. Aquí tienes tu primera medalla.
+El camino hacia el Valle de las Palabras se abrió entre los árboles.
 
-Una estrellita de luz violeta se metió en tu bolsillo. Plip.
+—<strong class="en">Nuevo territorio desbloqueado.</strong> Nova nos espera.`,
 
-—Vamos —dijo Lumi—. <strong class="en">Nova is waiting.</strong> 🟣`,
+  2:`🏆 <strong class="en">Nueva palabra encendida</strong>
 
-  2:`🏆 <strong class="en">¡Race Complete!</strong>
+Al finalizar la misión, las tarjetas ya no estaban confundidas. Los animales encontraron sus nombres, la comida recuperó su sabor, la ropa volvió a sus colores y las emociones pudieron expresarse.
 
-Nova se puso enfrente tuyo.
+Una nube sonrió y dijo:
 
-—<strong class="en">Last race!</strong> Tienes que armar una frase que diga quién eres tú. Una frase verdadera. Si es verdadera, va a brillar más que todas.
+<strong class="en">I am happy.</strong>
 
-Pensaste. Y dijiste:
+Un conejo levantó una zanahoria y dijo:
 
-—<strong class="en">I am brave. I can learn. I am here.</strong>
+<strong class="en">I like carrots.</strong>
 
-Las palabras no corrieron. Las palabras <em>explotaron</em>.
+Nova giró emocionada.
 
-Explotaron en luces de colores que llenaron toda la pista. Las criaturas-palabra formaron una torre que te llegaba al cielo. Y arriba del todo, brillando como un sol, se quedó tu frase entera.
+—Hoy no solo aprendieron palabras. Aprendieron a relacionarlas con imágenes, gustos y sentimientos.
 
-Nova te chocó los cinco con su colita.
+Lumi encendió la segunda Mission Star.
 
-—<strong class="en">You are fast. You are smart. You are ready for the next one.</strong>
+—Esta estrella representa la valentía de nombrar el mundo y expresar preferencias.
 
-Medalla naranja. Plip. Al bolsillo.
+El valle abrió un camino de tarjetas luminosas hacia la Ciudad de las Frases.
 
-Lumi te tomó de la mano. —Vamos. <strong class="en">Astro is waiting.</strong> 🟠`,
+—<strong class="en">The adventure continues...</strong> Astro espera.`,
 
-  3:`🏆 <strong class="en">¡The Big Book — Opened!</strong>
+  3:`🏆 <strong class="en">Nuevo territorio desbloqueado</strong>
 
-Astro te llevó al fondo de la biblioteca. Había un libro enorme, cerrado, con candado de luz.
+La Ciudad de las Frases volvió a tener movimiento. Los relojes marcaron la hora, los puentes conectaron preguntas con respuestas y las casas de palabras encendieron sus ventanas.
 
-—Este es <strong class="en">the Big Book</strong>. Solo se abre con una historia tuya. Verdadera. No hace falta que sea larga.
+El grupo formó frases como:
 
-Pusiste la mano sobre el libro y dijiste:
+<strong class="en">I go to school.</strong>
 
-—<strong class="en">Today I found a book. The book opened a door. I went to a new world. I am not the same.</strong>
+<strong class="en">I have lunch at twelve.</strong>
 
-El candado se deshizo en chispitas.
+<strong class="en">Can you dance?</strong>
 
-<strong class="en">The Big Book</strong> se abrió solo. De adentro salió una luz que iluminó toda la biblioteca. Todos los libros se pusieron de colores brillantes. Las historias dormidas despertaron una por una, como pajaritos al amanecer.
+<strong class="en">Yes, I can.</strong>
 
-Astro te abrazó (los abrazos de luna son fresquitos y te dejan tranquilo).
+Astro cerró su cuaderno con satisfacción.
 
-—<strong class="en">You are a reader now.</strong> Y un lector siempre lleva mundos adentro.
+—Comunicarse no es repetir palabras sueltas. Es organizarlas para expresar una idea.
 
-Medalla cyan. Plip.
+Lumi encendió la tercera Mission Star.
 
-—<strong class="en">One more kingdom, brave one.</strong> 🌙`,
+—Esta estrella representa la construcción de sentido.
 
-  4:`🏆 <strong class="en">¡Festival of Voices — Alive!</strong>
+Desde la ciudad se abrió un camino hacia una gran plaza llena de voces.
 
-Fuiste por todo el festival hablando con todos.
+—<strong class="en">The final mission is waiting.</strong>`,
 
-—<strong class="en">How are you?</strong> — le preguntaste a una nubecita rosada.
-—<strong class="en">I am happy now.</strong> —respondió.
+  4:`🏆 <strong class="en">Englishland vuelve a brillar</strong>
 
-—<strong class="en">Do you like to sing?</strong> — le dijiste a un cometa.
-—<strong class="en">Yes! I love it!</strong>
+Al completar la misión, la Plaza del Encuentro despertó por completo. Los lugares recuperaron sus nombres, las personas pudieron preguntar y responder, y las voces volvieron a llenar Englishland.
 
-—<strong class="en">You are not alone. I am here.</strong> —le dijiste a una estrellita tímida.
+Un estudiante dijo:
 
-Ella se puso a llorar lágrimas de luz. Porque a veces eso es lo que uno necesita oír.
+<strong class="en">There is a library.</strong>
 
-Las criaturas formaron un círculo y cantaron juntas:
+Otro respondió:
 
-<em>"We are friends. We are stars. We can speak. We are not afraid."</em>
+<strong class="en">It is near the school.</strong>
 
-Cantaste con ellos. <strong class="en">Con tu voz.</strong> Sin pena.
+Una nube preguntó:
 
-Nebu te miró con sus ojitos dulces.
+<strong class="en">How are you?</strong>
 
-—<strong class="en">You found your voice.</strong> La medalla más difícil de ganar.
+Y todos contestaron:
 
-Cuatro medallas. Cuatro reinos. Cuatro amigos. <strong class="en">¡You did it all!</strong> ☁️`,
+<strong class="en">I am fine, thanks.</strong>
+
+Lumi colocó la cuarta Mission Star en el mapa. Las cuatro estrellas se unieron formando una constelación sobre Englishland.
+
+—Aprender inglés no significa no equivocarse - dijo Lumi -. Significa atreverse a escuchar, intentar, practicar, corregir y volver a hablar.
+
+El cuaderno apareció lleno de luz. Pero al final del mapa se abrió un pequeño portal nuevo.
+
+Pixie lo miró con curiosidad.
+
+—Parece que Englishland tiene otros territorios...
+
+Nebu sonrió.
+
+—Pero esa será otra aventura.
+
+Sobre la última página apareció una frase brillante:
+
+<strong class="en">The adventure continues...</strong>`,
 };
 
 // ==================== FÍSICA Y MUNDO ====================
@@ -894,17 +966,17 @@ function openBookStory(){
   const LEVEL_CHARS  = {1:'assets/characters/cosmo-wave.png',2:'assets/characters/nova-ready.png',3:'assets/characters/astro-wave.png',4:'assets/characters/nebu-float-cutout.png'};
   const LEVEL_EMOJIS = {1:'🟣',2:'🟠',3:'🌙',4:'☁️'};
   const LEVEL_TITLES = {
-    1:'Cosmo y el Reino sin nombres',
-    2:'Nova y la Carrera de las Frases',
-    3:'Astro y la Biblioteca que Susurra',
-    4:'Nebu y el Festival de las Voces'
+    1:'Cosmo y el Bosque de los Sonidos',
+    2:'Nova y el Valle de las Palabras Perdidas',
+    3:'Astro y la Ciudad de las Frases',
+    4:'Nebu y la Plaza del Encuentro'
   };
 
   if(scene === 'menu'){
     showStory(
-      '📖 EL CUADERNO QUE RESPIRABA',
-      'Bienvenido a English Land',
-      'El inicio de tu aventura',
+      '📖 EL CUADERNO QUE ABRIÓ ENGLISHLAND',
+      'Bienvenido a Englishland',
+      'El inicio de English Adventure Quest',
       ENGLISH_LAND_INTRO,
       'assets/characters/lumi-wave.png',
       'Cerrar 📖',
@@ -1396,7 +1468,7 @@ function answerQuestion(chosen, q, btn){
   const fb = document.getElementById('q-feedback');
   if(correct){
     btn.classList.add('correct');
-    fb.textContent = '✅ ¡Correcto! Mission Star ganada.';
+    fb.textContent = '✅ ¡Correcto! Mission Star ganada. Nueva palabra encendida.';
     fb.style.color = '#3DDC84';
     playSound('correct');
   } else {
@@ -2271,9 +2343,9 @@ async function init(){
   document.getElementById('loading').classList.add('hidden');
   // Mostrar historia de bienvenida antes del menú
   showStory(
-    'English Land',
-    'English Land Adventure Quest',
-    'El reino mágico del idioma inglés',
+    'Englishland',
+    'English Adventure Quest',
+    'Explora Englishland y recupera la luz de las palabras',
     LEVEL_STORIES[0],
     null,
     '¡Comenzar la aventura! ▶',
