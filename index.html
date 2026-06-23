@@ -5274,6 +5274,15 @@ const resourcesData = {
   }
 };
 
+const activityTemplateLinks = {
+  "Picture Bingo": "https://drive.google.com/file/d/1YkVp27OFqGGkzz-XJOCpwkukanmr5d0M/view?usp=sharing",
+  "Color Finder Race": "https://drive.google.com/file/d/1ZD33q_Tpv3K8sZ9isaFPhmemoGsXkgOA/view?usp=sharing",
+  "Song and Fill": "https://drive.google.com/file/d/1nPCWNWjyNs4GRnpTBdOaslu0osCWPkUL/view?usp=sharing",
+  "Board Game Bottle": "https://drive.google.com/file/d/1Z50kz8frTXr3-uCJfrm72X-djXDHgC7E/view?usp=sharing",
+  "Spot the Difference": "https://drive.google.com/file/d/1GlQ6x4ystQPpYbXbe-pUShqxRzzBdGeH/view?usp=sharing",
+  "My Town Map": "https://drive.google.com/file/d/1tfthfmXhArSSnG8Oeh5z_P1L-_lr87t0/view?usp=sharing"
+};
+
 const REFERENCES_TEXT = String.raw`
 Acosta Uñate, A. P. (2024). Implementación de la gamificación en la enseñanza del inglés a través de The Goose Game [Trabajo de grado de especialización, Universidad de La Sabana]. https://intellectum.unisabana.edu.co/entities/publication/a64ebe84-deb6-4257-91a4-bdd2542cab38
 Agudelo Escalante, Y., & Sierra Prada, K. (2022). Gamificación como estrategia didáctica en Edmodo y aprendizaje basado en retos para mejorar la competencia léxica del inglés en estudiantes de grado undécimo [Trabajo de grado, Universidad de Santander]. https://repositorio.udes.edu.co/entities/publication/3ed3daf6-dcff-4b13-ae4f-2ec4af01055b
@@ -5523,7 +5532,14 @@ function buildResourceSlots(a) {
   const resource = getTopicResources(a);
   const downloadableFiles = resource.downloadableFiles || [];
   const youtubeVideos = resource.youtubeVideos || [];
+  const templateLink = activityTemplateLinks[a.name];
   const slots = [
+    ...(templateLink ? [{
+      icon: '🧩',
+      label: currentLang === 'en' ? 'Template' : 'Plantilla',
+      href: templateLink,
+      title: currentLang === 'en' ? `${a.name}: printable template` : `${a.name}: plantilla`
+    }] : []),
     ...downloadableFiles.map((href, index) => ({
       icon: '📄',
       label: downloadableLabel(index, downloadableFiles.length),
