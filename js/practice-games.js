@@ -265,10 +265,34 @@ const visualHTML = text => {
   return `<span class="icon-fallback">${escapeHTML(visual.icon)}</span>`;
 };
 const absoluteAssetURL = path => new URL(path, window.location.href).href;
-const bingoPrintVisualHTML = text => {
+const inlineAssetCache = new Map();
+
+async function inlineAssetURL(path) {
+  const absoluteURL = absoluteAssetURL(path);
+  if (inlineAssetCache.has(absoluteURL)) return inlineAssetCache.get(absoluteURL);
+  try {
+    const response = await fetch(absoluteURL);
+    if (!response.ok) throw new Error(`Asset request failed: ${response.status}`);
+    const blob = await response.blob();
+    const dataURL = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+    inlineAssetCache.set(absoluteURL, dataURL);
+    return dataURL;
+  } catch (error) {
+    inlineAssetCache.set(absoluteURL, absoluteURL);
+    return absoluteURL;
+  }
+}
+
+const bingoPrintVisualHTML = async text => {
   const visual = visualFor(text);
   if (visual.image) {
-    return `<span class="print-icon"><img src="${escapeHTML(absoluteAssetURL(visual.image))}" alt=""></span>`;
+    const src = await inlineAssetURL(visual.image);
+    return `<span class="print-icon"><img src="${escapeHTML(src)}" alt=""></span>`;
   }
   if (visual.color) {
     return `<span class="print-swatch" style="--print-swatch:${escapeHTML(visual.color)}"><span>${escapeHTML(visual.label)}</span></span>`;
@@ -665,15 +689,29 @@ function buildBingoCard(level, cardNumber) {
     .map(item => ({ ...item, cardNumber }));
 }
 
-function buildBingoCardsHTML(level = state.level, count = 12) {
+async function buildBingoCardsHTML(level = state.level, count = 12) {
   const bank = WORD_BANK[level];
   const cards = Array.from({ length: count }, (_, index) => buildBingoCard(level, index + 1));
-  const calledBank = bank.words.map(([word, def]) => `<li>${bingoPrintVisualHTML(word)}<span><strong>${escapeHTML(word)}</strong> - ${escapeHTML(def)}</span></li>`).join('');
+  const uniqueWords = [...new Set([
+    ...bank.words.map(([word]) => word),
+    ...cards.flat().filter(item => !item.free).map(item => item.word)
+  ])];
+  const printVisuals = Object.fromEntries(await Promise.all(
+    uniqueWords.map(async word => [word, await bingoPrintVisualHTML(word)])
+  ));
+  const calledBank = bank.words.map(([word, def]) => `<li>${printVisuals[word]}<span><strong>${escapeHTML(word)}</strong> - ${escapeHTML(def)}</span></li>`).join('');
+  const wordClass = word => {
+    const value = String(word);
+    return [
+      value.length > 12 ? 'long' : '',
+      /\s|\?|'/.test(value) ? 'phrase' : ''
+    ].filter(Boolean).join(' ');
+  };
   const cardHTML = cards.map((card, index) => `
     <section class="print-card">
       <header>
         <div>
-          <small>English Land: Adventure Quest - Mission Stars</small>
+          <small>English Adventure Quest - Mission Stars</small>
           <h2>Word Bingo Quest</h2>
           <p>${escapeHTML(bank.label)} - Guia: ${escapeHTML(bank.guide)} - Carton ${index + 1}</p>
         </div>
@@ -681,8 +719,8 @@ function buildBingoCardsHTML(level = state.level, count = 12) {
       </header>
       <div class="bingo-grid">
         ${card.map(item => `<div class="print-cell ${item.free ? 'free' : ''}">
-          ${item.free ? '<span class="print-fallback">★</span>' : bingoPrintVisualHTML(item.word)}
-          <span class="print-word">${escapeHTML(item.word)}</span>
+          ${item.free ? '<span class="print-fallback">★</span>' : printVisuals[item.word]}
+          <span class="print-word ${wordClass(item.word)}">${escapeHTML(item.word)}</span>
         </div>`).join('')}
       </div>
       <footer>Marca la palabra cuando el docente la llame. Grita BINGO cuando completes una fila, columna o diagonal.</footer>
@@ -700,23 +738,25 @@ function buildBingoCardsHTML(level = state.level, count = 12) {
     body{margin:0;padding:18px;background:#f7f2ff;color:#21124a;font-family:Arial,sans-serif}
     .toolbar{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;justify-content:space-between;margin:-18px -18px 18px;padding:12px 18px;background:#fff;border-bottom:1px solid #ded7f7}
     .toolbar button{border:0;border-radius:999px;background:#5e3ae2;color:#fff;font-weight:800;padding:10px 16px;cursor:pointer}
-    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-    .print-card{break-inside:avoid;background:#fff;border:2px solid #5e3ae2;border-radius:16px;padding:14px;box-shadow:0 10px 24px rgba(33,18,74,.10)}
-    header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-    small{display:block;color:#5e3ae2;font-weight:800;text-transform:uppercase;letter-spacing:.8px;font-size:10px}
-    h2{margin:2px 0 0;font-size:22px}
-    p{margin:2px 0 0;color:#645486;font-size:12px}
-    .star{width:42px;height:42px;border-radius:14px;background:#fff1ad;display:grid;place-items:center;font-size:24px;flex:0 0 auto}
-    .bingo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
-    .print-cell{min-height:74px;border:1.5px solid #ded7f7;border-radius:10px;display:grid;grid-template-rows:1fr auto;place-items:center;text-align:center;padding:5px;font-weight:800;font-size:12px;line-height:1.12;gap:3px}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+    .print-card{break-inside:avoid;background:#fff;border:2px solid #5e3ae2;border-radius:14px;padding:12px;box-shadow:0 10px 24px rgba(33,18,74,.10);overflow:hidden}
+    header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    small{display:block;color:#5e3ae2;font-weight:800;text-transform:uppercase;letter-spacing:.4px;font-size:9px}
+    h2{margin:2px 0 0;font-size:20px;line-height:1}
+    p{margin:2px 0 0;color:#645486;font-size:11px;line-height:1.25}
+    .star{width:38px;height:38px;border-radius:12px;background:#fff1ad;display:grid;place-items:center;font-size:22px;flex:0 0 auto}
+    .bingo-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+    .print-cell{height:72px;border:1.5px solid #ded7f7;border-radius:9px;display:grid;grid-template-rows:38px minmax(0,1fr);place-items:center;text-align:center;padding:4px;font-weight:800;font-size:11px;line-height:1.08;gap:2px;overflow:hidden}
     .print-cell.free{background:#ffd447;color:#21124a}
-    .print-icon{width:34px;height:34px;display:grid;place-items:center}
+    .print-icon{width:37px;height:37px;display:grid;place-items:center}
     .print-icon img{max-width:100%;max-height:100%;object-fit:contain;display:block}
-    .print-swatch{width:32px;height:32px;border-radius:999px;background:var(--print-swatch);border:2px solid rgba(33,18,74,.16);display:grid;place-items:center;color:#21124a;font-size:8px;font-weight:900}
+    .print-swatch{width:35px;height:35px;border-radius:999px;background:var(--print-swatch);border:2px solid rgba(33,18,74,.16);display:grid;place-items:center;color:#21124a;font-size:8px;font-weight:900}
     .print-swatch span{padding:1px 3px;border-radius:999px;background:rgba(255,255,255,.78)}
-    .print-fallback{width:34px;height:34px;border-radius:12px;background:#f1ecff;color:#5e3ae2;display:grid;place-items:center;font-size:13px;font-weight:900}
-    .print-word{display:block;max-width:100%;overflow-wrap:anywhere}
-    footer{margin-top:8px;color:#645486;font-size:11px;line-height:1.35}
+    .print-fallback{width:37px;height:37px;border-radius:12px;background:#f1ecff;color:#5e3ae2;display:grid;place-items:center;font-size:13px;font-weight:900}
+    .print-word{display:flex;align-items:center;justify-content:center;width:100%;max-width:100%;min-width:0;overflow:hidden;overflow-wrap:anywhere;word-break:normal;font-size:10.5px;line-height:1.05}
+    .print-word.long{font-size:9.2px}
+    .print-word.phrase{font-size:8.6px;line-height:1.02}
+    footer{margin-top:7px;color:#645486;font-size:10.5px;line-height:1.25}
     .teacher-bank{margin-top:18px;padding:16px;border-radius:16px;background:#fff;border:1px solid #ded7f7}
     .teacher-bank h2{font-size:18px}
     .teacher-bank ol{columns:2;color:#2a1e52;font-size:12px;line-height:1.55;padding-left:18px}
@@ -726,8 +766,8 @@ function buildBingoCardsHTML(level = state.level, count = 12) {
     @media print{
       body{padding:0;background:#fff}
       .toolbar{display:none}
-      .cards{grid-template-columns:repeat(2,1fr);gap:8mm}
-      .print-card{box-shadow:none;border-radius:10px;page-break-inside:avoid}
+      .cards{grid-template-columns:repeat(2,1fr);gap:7mm}
+      .print-card{box-shadow:none;border-radius:9px;page-break-inside:avoid;break-inside:avoid}
       .teacher-bank{page-break-before:always}
     }
     @page{size:letter;margin:10mm}
@@ -747,12 +787,12 @@ function buildBingoCardsHTML(level = state.level, count = 12) {
 </html>`;
 }
 
-function printBingoCards() {
+async function printBingoCards() {
   logGameEvent('bingo_print', { game: 'bingo', level: state.level, resourceType: 'internal_game', resourceLabel: 'Cartones Bingo' });
-  const html = buildBingoCardsHTML(state.level, 12);
   const win = window.open('', '_blank');
+  const html = await buildBingoCardsHTML(state.level, 12);
   if (!win) {
-    downloadBingoCards();
+    await downloadBingoCards(html);
     return;
   }
   win.opener = null;
@@ -762,16 +802,22 @@ function printBingoCards() {
   win.focus();
 }
 
-function downloadBingoCards() {
+async function downloadBingoCards(prebuiltHTML = '') {
   logGameEvent('bingo_download', { game: 'bingo', level: state.level, resourceType: 'internal_game', resourceLabel: 'Cartones Bingo HTML' });
   const label = WORD_BANK[state.level].label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  const blob = new Blob([buildBingoCardsHTML(state.level, 12)], { type: 'text/html;charset=utf-8' });
+  const html = typeof prebuiltHTML === 'string' && prebuiltHTML
+    ? prebuiltHTML
+    : await buildBingoCardsHTML(state.level, 12);
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `english-land-bingo-cartones-${label}.html`;
+  link.download = `english-adventure-bingo-cartones-${label}.html`;
+  link.style.display = 'none';
+  document.body.appendChild(link);
   link.click();
-  URL.revokeObjectURL(url);
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function initSimon(level = state.simonLevel) {
