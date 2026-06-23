@@ -1518,7 +1518,11 @@
     .game-word {
       display: block;
       overflow-wrap: anywhere;
+      max-width: 100%;
+      line-height: 1.15;
     }
+    .game-word.long { font-size: 12px; }
+    .game-word.phrase { font-size: 11px; line-height: 1.08; }
     .bingo-cell.marked {
       background: linear-gradient(135deg, var(--green), #00D9FF);
       color: #fff;
@@ -1627,6 +1631,34 @@
       box-shadow: 0 0 0 4px rgba(255,77,109,.08);
     }
     .sentence-answer .sentence-token { min-height: auto; }
+    #sentence-prompt {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .sentence-prompt-visual {
+      display: inline-grid;
+      place-items: center;
+      vertical-align: middle;
+    }
+    .sentence-prompt-visual .icon-fallback,
+    .sentence-prompt-visual .icon-swatch,
+    .sentence-prompt-visual .icon-image-tile {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      margin: 0;
+    }
+    .sentence-prompt-visual img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      display: block;
+    }
+    .sentence-token.long { font-size: 13px; line-height: 1.15; }
+    .sentence-token.phrase { font-size: 12px; line-height: 1.12; }
+    .sentence-bank .sentence-token.phrase { min-height: 74px; }
     .sentence-token.wrong {
       background: linear-gradient(135deg, #FF4D6D, #FF8A3D) !important;
       border-color: #FF4D6D !important;
@@ -5770,7 +5802,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('acc1').classList.add('open');
 });
   </script>
-  <script src="js/noto-icon-map.js"></script>
-  <script src="js/practice-games.js"></script>
+  <script src="js/noto-icon-map.js?v=20260623-simon-memory-sentence"></script>
+  <script src="js/practice-games.js?v=20260623-simon-memory-sentence"></script>
 </body>
 </html>

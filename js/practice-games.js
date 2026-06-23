@@ -225,8 +225,24 @@ const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({
   "'": '&#39;'
 }[char]));
 const NOTO_ICON_CODES = window.NOTO_ICON_CODES || {};
+const visualKeyVariants = value => {
+  const raw = String(value || '').trim();
+  if (!raw) return [];
+  const lower = raw.toLowerCase();
+  const noPunctuation = lower.replace(/[’']/g, '').replace(/[?!.]/g, '');
+  const slug = noPunctuation.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return [...new Set([
+    raw,
+    lower,
+    noPunctuation,
+    slug,
+    slug.replace(/-/g, ' '),
+    raw.replace(/\s+/g, '-')
+  ].filter(Boolean))];
+};
 const notoIconPath = text => {
-  const code = NOTO_ICON_CODES[text];
+  const key = visualKeyVariants(text).find(candidate => NOTO_ICON_CODES[candidate]);
+  const code = key ? NOTO_ICON_CODES[key] : '';
   return code ? `assets/resources/noto-icons/${code}.svg` : '';
 };
 function inferNotoIconKey(text) {
@@ -256,6 +272,40 @@ const visualFor = text => {
   if (mapped && RESOURCE_IMAGES[mapped]) return { image: RESOURCE_IMAGES[mapped], alt: text };
   return { icon: iconFor(text) };
 };
+const VISUAL_CATEGORY_KEYS = {
+  'Objeto escolar': 'pencil',
+  'Saludo basico': 'hello',
+  'Saludo de clase': 'good morning',
+  Numeros: 'one',
+  Colores: 'blue',
+  Cuerpo: 'head',
+  'Accion de clase': 'book',
+  Familia: 'mother',
+  Cortesia: 'thank you',
+  Disposicion: 'answer',
+  Motivacion: 'favorite',
+  Emocion: 'happy',
+  Gustos: 'I like',
+  Frutas: 'fruit',
+  Animal: 'animal',
+  Ropa: 'clothes',
+  Comida: 'food',
+  Amistad: 'friend',
+  Rutina: 'daily routine',
+  Clase: 'study',
+  Accion: 'action verb',
+  Dia: 'Monday',
+  Habilidad: 'I can',
+  Pregunta: 'question',
+  Hora: 'What time is it?',
+  Lugar: 'place',
+  Ubicacion: 'near',
+  Descripcion: 'beautiful',
+  Comunidad: 'community',
+  Salon: 'school',
+  Dialogo: 'dialogue',
+  Respuesta: 'answer'
+};
 const visualHTML = text => {
   const visual = visualFor(text);
   if (visual.image) return `<span class="icon-image-tile"><img src="${visual.image}" alt=""></span>`;
@@ -263,6 +313,26 @@ const visualHTML = text => {
     return `<span class="icon-swatch" style="--swatch:${visual.color}"><span>${escapeHTML(visual.label)}</span></span>`;
   }
   return `<span class="icon-fallback">${escapeHTML(visual.icon)}</span>`;
+};
+const hasSpecificVisual = text => {
+  const visual = visualFor(text);
+  return Boolean(visual.image || visual.color || (visual.icon && visual.icon !== 'EL'));
+};
+const bestVisualKeyForText = (values, level) => {
+  const candidates = values.flatMap(value => [value, VISUAL_CATEGORY_KEYS[value], COMMAND_ICONS[value], inferNotoIconKey(value)]).filter(Boolean);
+  const text = values.join(' ').toLowerCase();
+  const levelWords = (WORD_BANK[level]?.words || [])
+    .map(([word]) => word)
+    .sort((a, b) => b.length - a.length);
+  candidates.push(...levelWords.filter(word => text.includes(word.toLowerCase())));
+  return candidates.find(hasSpecificVisual) || 'question';
+};
+const semanticTextClass = value => {
+  const text = String(value || '');
+  return [
+    text.length > 18 ? 'long' : '',
+    /\s|\?|'/.test(text) ? 'phrase' : ''
+  ].filter(Boolean).join(' ');
 };
 const absoluteAssetURL = path => new URL(path, window.location.href).href;
 const inlineAssetCache = new Map();
@@ -840,7 +910,7 @@ function renderSimonChoices() {
   choices.innerHTML = SIMON_COMMANDS[state.simonLevel].map(command =>
     `<button class="simon-choice" type="button" data-command="${escapeHTML(command)}">
       <span class="game-icon">${visualHTML(command)}</span>
-      <span class="game-word">${escapeHTML(command)}</span>
+      <span class="game-word ${semanticTextClass(command)}">${escapeHTML(command)}</span>
     </button>`
   ).join('');
 }
@@ -919,22 +989,29 @@ function chooseSimon(command) {
 function buildMemoryPairs(level) {
   const wordPairs = WORD_BANK[level].words.map(([word, def], index) => ({
     pair: `word-${level}-${index}`,
-    a: { text: word, kind: 'word' },
-    b: { text: def, kind: 'def' },
+    visualKey: word,
+    a: { text: word, kind: 'word', visualKey: word },
+    b: { text: def, kind: 'def', visualKey: word },
     topic: def
   }));
-  const questionPairs = QUESTION_BANK[level].slice(0, 10).map((question, index) => ({
-    pair: `question-${level}-${index}`,
-    a: { text: question, kind: 'question' },
-    b: { text: sentenceForWord(level, WORD_BANK[level].words[index % WORD_BANK[level].words.length][0]), kind: 'answer' },
-    topic: 'communicative question'
-  }));
+  const questionPairs = QUESTION_BANK[level].slice(0, 10).map((question, index) => {
+    const linkedWord = WORD_BANK[level].words[index % WORD_BANK[level].words.length][0];
+    return {
+      pair: `question-${level}-${index}`,
+      visualKey: linkedWord,
+      a: { text: question, kind: 'question', visualKey: linkedWord },
+      b: { text: sentenceForWord(level, linkedWord), kind: 'answer', visualKey: linkedWord },
+      topic: 'communicative question'
+    };
+  });
   const sentencePairs = SENTENCE_BANK[level].slice(0, 10).map((item, index) => {
     const normalized = normalizeSentence(item, level);
+    const visualKey = bestVisualKeyForText([normalized.sentence, normalized.prompt], level);
     return {
       pair: `sentence-${level}-${index}`,
-      a: { text: normalized.sentence, kind: 'sentence' },
-      b: { text: normalized.prompt, kind: 'prompt' },
+      visualKey,
+      a: { text: normalized.sentence, kind: 'sentence', visualKey },
+      b: { text: normalized.prompt, kind: 'prompt', visualKey },
       topic: normalized.prompt
     };
   });
@@ -946,8 +1023,8 @@ function newMemory(level = state.memoryLevel) {
   state.memoryLevel = Number(level);
   const pairs = shuffle(buildMemoryPairs(state.memoryLevel)).slice(0, 6);
   state.memoryCards = shuffle(pairs.flatMap(pair => [
-    { pair: pair.pair, text: pair.a.text, kind: pair.a.kind, topic: pair.topic, revealed: false, matched: false },
-    { pair: pair.pair, text: pair.b.text, kind: pair.b.kind, topic: pair.topic, revealed: false, matched: false }
+    { pair: pair.pair, text: pair.a.text, kind: pair.a.kind, topic: pair.topic, visualKey: pair.a.visualKey || pair.visualKey, revealed: false, matched: false },
+    { pair: pair.pair, text: pair.b.text, kind: pair.b.kind, topic: pair.topic, visualKey: pair.b.visualKey || pair.visualKey, revealed: false, matched: false }
   ]));
   state.memoryOpen = [];
   state.memoryTries = 0;
@@ -960,8 +1037,8 @@ function renderMemory() {
   $('#memory-grid').innerHTML = state.memoryCards.map((card, idx) => {
     const shown = card.revealed || card.matched;
     return `<button class="memory-card ${shown ? 'revealed' : ''} ${card.matched ? 'matched' : ''}" type="button" data-memory="${idx}">
-      <span class="game-icon">${shown ? visualHTML(card.kind === 'word' ? card.text : card.topic) : '?'}</span>
-      <span class="game-word">${shown ? escapeHTML(card.text) : 'Mystery'}</span>
+      <span class="game-icon">${shown ? visualHTML(card.visualKey || card.text || card.topic) : '?'}</span>
+      <span class="game-word ${shown ? semanticTextClass(card.text) : ''}">${shown ? escapeHTML(card.text) : 'Mystery'}</span>
     </button>`;
   }).join('');
   const matched = state.memoryCards.filter(card => card.matched).length / 2;
@@ -1016,7 +1093,7 @@ function newSentence(level = state.sentenceLevel) {
   const tokens = selected.sentence.split(' ');
   state.sentenceMode = weightedSentenceMode(state.sentenceLevel);
   if (tokens.length < 3 && state.sentenceMode === 'missing') state.sentenceMode = 'order';
-  state.sentence = { ...selected, tokens, completed: false };
+  state.sentence = { ...selected, tokens, visualKey: bestVisualKeyForText([selected.sentence, selected.prompt], state.sentenceLevel), completed: false };
   state.sentenceAnswer = [];
   state.sentenceOptions = [];
   state.sentenceWrong = false;
@@ -1032,7 +1109,7 @@ function newSentence(level = state.sentenceLevel) {
     state.sentenceOptions = buildSentenceChoiceOptions(state.sentence.sentence, state.sentenceLevel);
   }
   renderLevels('#sentence-level-row', state.sentenceLevel, 'sentence');
-  $('#sentence-prompt').textContent = selected.prompt;
+  $('#sentence-prompt').innerHTML = `<span class="sentence-prompt-visual">${visualHTML(state.sentence.visualKey)}</span><span>${escapeHTML(selected.prompt)}</span>`;
   $('#sentence-bank-info').textContent = WORD_BANK[state.sentenceLevel].label + ' - Modo: ' + state.sentenceMode;
   renderSentence();
   logGameEvent('sentence_new', { game: 'sentences', level: state.sentenceLevel, mode: state.sentenceMode, topic: selected.prompt });
@@ -1045,18 +1122,18 @@ function renderSentence() {
   if (state.sentenceMode === 'missing') {
     if (answerEl) answerEl.classList.remove('wrong');
     const display = state.sentence.tokens.map((word, index) => index === state.sentence.missingIndex ? '___' : word).join(' ');
-    $('#sentence-answer').innerHTML = '<div class="sentence-token used">' + escapeHTML(display) + '</div>';
+    $('#sentence-answer').innerHTML = '<div class="sentence-token used ' + semanticTextClass(display) + '">' + escapeHTML(display) + '</div>';
     $('#sentence-bank').innerHTML = state.sentenceOptions.map(option =>
-      '<button class="sentence-token" type="button" data-sentence-option="' + escapeHTML(option) + '">' + escapeHTML(option) + '</button>'
+      '<button class="sentence-token ' + semanticTextClass(option) + '" type="button" data-sentence-option="' + escapeHTML(option) + '">' + escapeHTML(option) + '</button>'
     ).join('');
     $('#sentence-status').textContent = 'Elige la palabra que completa la frase.';
     return;
   }
   if (state.sentenceMode === 'choose') {
     if (answerEl) answerEl.classList.remove('wrong');
-    $('#sentence-answer').innerHTML = '<div class="sentence-token used">Elige la frase que responde al prompt.</div>';
+    $('#sentence-answer').innerHTML = '<div class="sentence-token used phrase">Elige la frase que responde al prompt.</div>';
     $('#sentence-bank').innerHTML = state.sentenceOptions.map(option =>
-      '<button class="sentence-token" type="button" data-sentence-option="' + escapeHTML(option) + '">' + escapeHTML(option) + '</button>'
+      '<button class="sentence-token ' + semanticTextClass(option) + '" type="button" data-sentence-option="' + escapeHTML(option) + '">' + escapeHTML(option) + '</button>'
     ).join('');
     $('#sentence-status').textContent = 'Lee y escoge la mejor frase.';
     return;
@@ -1064,10 +1141,10 @@ function renderSentence() {
   const used = new Set(state.sentenceAnswer.map(item => item.id));
   const locked = state.sentenceWrong || state.sentence.completed;
   $('#sentence-answer').innerHTML = state.sentenceAnswer.map(item =>
-    '<button class="sentence-token used ' + (state.sentenceWrong ? 'wrong' : '') + '" type="button" ' + (locked ? 'disabled' : 'data-remove-token="' + item.id + '"') + '>' + escapeHTML(item.word) + '</button>'
+    '<button class="sentence-token used ' + semanticTextClass(item.word) + ' ' + (state.sentenceWrong ? 'wrong' : '') + '" type="button" ' + (locked ? 'disabled' : 'data-remove-token="' + item.id + '"') + '>' + escapeHTML(item.word) + '</button>'
   ).join('');
   $('#sentence-bank').innerHTML = state.sentenceTokenOrder.map(item =>
-    '<button class="sentence-token ' + (used.has(item.id) ? 'used' : '') + '" type="button" data-token="' + item.id + '" ' + (used.has(item.id) || locked ? 'disabled' : '') + '>' + escapeHTML(item.word) + '</button>'
+    '<button class="sentence-token ' + semanticTextClass(item.word) + ' ' + (used.has(item.id) ? 'used' : '') + '" type="button" data-token="' + item.id + '" ' + (used.has(item.id) || locked ? 'disabled' : '') + '>' + escapeHTML(item.word) + '</button>'
   ).join('');
   const answer = state.sentenceAnswer.map(item => item.word).join(' ');
   if (!answer) $('#sentence-status').textContent = 'Selecciona las palabras en orden.';
